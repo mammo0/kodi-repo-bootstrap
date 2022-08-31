@@ -289,7 +289,17 @@ class AssetCopier:
                             # only process element nodes (<icon>, <fanart>, ...)
                             if asset.nodeType == Node.ELEMENT_NODE:
                                 # the first child (Node.TEXT_NODE) of an asset element contains the path
-                                shutil.copy2(os.path.join(addon_directory, asset.firstChild.nodeValue), addon_out_path)
+                                asset_path_rel = asset.firstChild.nodeValue
+                                asset_path_src = os.path.join(addon_directory, asset_path_rel)
+                                asset_path_dest = os.path.join(addon_out_path, asset_path_rel)
+
+                                # create the destination path if it doesn't exist
+                                if not os.path.exists(os.path.dirname(asset_path_dest)):
+                                    os.makedirs(os.path.dirname(asset_path_dest))
+
+                                # copy the asset (if it exists)
+                                if os.path.isfile(asset_path_src):
+                                    shutil.copy2(asset_path_src, asset_path_dest)
 
                         # can exit here, because there is only one 'assets' tag
                         break
