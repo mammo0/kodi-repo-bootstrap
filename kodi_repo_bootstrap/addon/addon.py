@@ -4,14 +4,18 @@ import zipfile
 from importlib import resources
 from io import BufferedReader, BufferedWriter, BytesIO, TextIOWrapper
 from pathlib import Path
-from typing import IO, Final, List, Optional, cast
+from typing import IO, TYPE_CHECKING, Final, List, Optional
 from xml.dom import minidom
+from xml.dom.minicompat import NodeList
 from xml.dom.minidom import Document, Element, Node
 from zipfile import ZipFile
 
 from kodi_repo_bootstrap.fs.file import DEFAULT_FILE_ENCODING, File
 from kodi_repo_bootstrap.repo.config import Config
 from kodi_repo_bootstrap.repo.version import SemanticVersion
+
+if TYPE_CHECKING:
+    from xml.dom.minidom import _ElementChildren
 
 
 class Addon:
@@ -35,7 +39,7 @@ class Addon:
             self.__xml_lines = TextIOWrapper(addon_xml_fp).readlines()
 
         # the "addon" tag is the root tag
-        root: List[Element] = self.__parsed_xml.getElementsByTagName("addon")
+        root: NodeList[Element] = self.__parsed_xml.getElementsByTagName("addon")
         if len(root) != 1:
             raise ValueError(f"The addon.xml file of '{addon_path}' has the wrong format.")
         root_tag: Element = root[0]
@@ -58,14 +62,12 @@ class Addon:
             assets_tag: Element
             for assets_tag in extension.getElementsByTagName("assets"):
                 # iterate over the assets
-                asset: Element
+                asset: _ElementChildren
                 for asset in assets_tag.childNodes:
-                    asset: Element = cast(Element, asset)
-
                     # only process element nodes (<icon>, <fanart>, ...)
                     if asset.nodeType == Node.ELEMENT_NODE:
                         # the first child (Node.TEXT_NODE) of an asset element contains the path
-                        child: Optional[Element] = cast(Optional[Element], asset.firstChild)
+                        child: Optional[_ElementChildren] = asset.firstChild
                         if child is not None and child.nodeType == Node.TEXT_NODE:
                             self.__asset_path_strs.append(child.nodeValue)
 
@@ -217,6 +219,6 @@ class RepoAddon(Addon):
         # save file
         File.save_file(repo_xml, file_path=addon_xml_path)
 
-    def create_zip_file(self, _dest_dir: Optional[Path]=None, _glob_pattern: str="") -> None:
+    def create_zip_file(self, dest_dir: Optional[Path]=None, glob_pattern: str="") -> None:
         # add only the generated addon.xml file to
         super().create_zip_file(dest_dir=self.__repo_addon_dir, glob_pattern="addon.xml")

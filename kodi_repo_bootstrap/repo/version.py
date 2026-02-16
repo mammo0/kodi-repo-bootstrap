@@ -48,7 +48,7 @@ class SemanticVersion:
     def other(self) -> Optional[str]:
         return self.__other
 
-    def __eq__(self, other_ver: "SemanticVersion") -> bool:
+    def __eq__(self, other_ver: object) -> bool:
         return str(self) == str(other_ver)
 
     def __gt__(self, other_ver: "SemanticVersion") -> bool:
