@@ -1,34 +1,29 @@
-[tool.poetry]
+[project]
 name = "kodi-repo-bootstrap"
-version = "2.0.0-post.18"
+dynamic = [ "version" ]
 description = "Bootstrap GIT repo for setting up a Kodi repository"
-authors = ["mammo0 <marc.ammon@hotmail.de>"]
-homepage = "https://github.com/mammo0/kodi-repo-bootstrap"
+authors = [
+    { name = "mammo0", email = "marc.ammon@hotmail.de" }
+]
 readme = "README.md"
 license = "GPL-2.0-only"
 
+requires-python = ">=3.12,<4.0"
 
-packages = [
-    { include = "kodi_repo_bootstrap" }
-]
+[project.urls]
+homepage = "https://github.com/mammo0/kodi-repo-bootstrap"
 
-include = ["kodi_repo_bootstrap/res/repo_addon.xml.tpl"]
-
-
-[tool.poetry.scripts]
+[project.scripts]
 kodi-repo-bootstrap = "kodi_repo_bootstrap.main:run"
 
 
-[tool.poetry.dependencies]
-python = "^3.12"
+[tool.poetry]
+version = "1.0.0"
+include = [
+    { path = "kodi_repo_bootstrap/res/repo_addon.xml.tpl", format = ["sdist", "wheel"] }
+]
 
-
-[tool.poetry-dynamic-versioning]
-enable = true
-vcs = "git"
-style = "semver"
-metadata = false
 
 [build-system]
-requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
-build-backend = "poetry_dynamic_versioning.backend"
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
