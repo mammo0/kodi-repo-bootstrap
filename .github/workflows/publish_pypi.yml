@@ -25,14 +25,13 @@ jobs:
         # setup python environment
         - name: Set up Python
           uses: actions/setup-python@v5
-        - name: Set up Poetry
-          uses: abatilo/actions-poetry@v3
           with:
-            poetry-plugins: "poetry-dynamic-versioning[plugin]"
+            python-version: "3.12"
+        - name: Install pypa/build
+          run: python3 -m pip install --user build
         # build the package
         - name: Build package
-          run: |
-            poetry build
+          run: python3 -m build
         # on a regular push (not pull request) publish the package to test PyPI repo
         - name: Publish package distributions to TestPyPI
           if: github.event_name != 'pull_request'
