@@ -28,6 +28,8 @@ poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 
 [tool.poetry-dynamic-versioning]
 enable = true
+# do not add commmit hash to distribution file (not alloed on (Test)PyPi)
+metadata = false
 
 
 [build-system]
