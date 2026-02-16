@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="{addonid}" name="{reponame}" version="{addonversion}" provider-name="{addonauthor}">
     <requires>
         <import addon="xbmc.addon" version="12.0.0"/>
